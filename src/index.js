@@ -4,6 +4,7 @@ const app = express();
 
 app.get('/', (request, response) => {
     response.send("Hello, world!");
+    console.log("Requisição feita com sucesso ✅")
 });
 
 
