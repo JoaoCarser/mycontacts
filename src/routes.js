@@ -4,7 +4,7 @@ const router = Router();
 
 const ContactController = require('./app/controllers/ContactController');
 
-// ROTAS SERÃO FEITAS AQUI (METODO, ENDPOINT, "HANDLER DE CONTACT CONTROLLER")
+// QUANDO O CONTROLLER FOR X EXECUTE O HANDLER Y
 router.get('/contacts', ContactController.index);
 
 

@@ -1,9 +1,13 @@
+const ContactsRepository = require('../repositories/ContactsRepository');
+
+
 class ContactController {
 
-    //TODAS AS REGRAS DE NEGÓCIOS SÃO TRATADOS AQUI
-    index (request, response){
-        // LISTAR TODOS OS REGISTROS
-        response.send('Send from Contact Controller');
+    //TODAS AS REGRAS DE NEGÓCIOS SÃO TRATADAS NO REPOSITORY
+    async index (request, response){
+         const contacts = await ContactsRepository.findAll();
+
+        response.json(contacts);
     }
 
     show(){
