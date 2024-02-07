@@ -2,6 +2,7 @@
 
 const { v4 } = require("uuid");
 
+// MOCKS DE CONTACTS
 let contacts = [
   {
     id: v4(),
@@ -21,6 +22,7 @@ let contacts = [
 
 class ContactsRepository {
   findAll() {
+    // PROMESSA DE RETORNAR SOMENTE QUANDO CARREGAR TODA A LISTA
     return new Promise((resolve) => {
       resolve(contacts);
     });
@@ -32,11 +34,33 @@ class ContactsRepository {
     });
   }
 
-
-  delete(id){
+  // USA NA FUNÇÃO 'STORE' EM CONTROLLER
+  findByEmail(email) {
     return new Promise((resolve) => {
-      contacts = (contacts.filter((contact) => contact.id !== id));
+      resolve(contacts.find((contact) => contact.email === email));
+    });
+  }
+
+  delete(id) {
+    return new Promise((resolve) => {
+      contacts = contacts.filter((contact) => contact.id !== id);
       resolve();
+    });
+  }
+
+  // USA NA FUNÇÃO 'STORE' EM CONTROLLER
+  create({ name, email, phone, category_id }) {
+    return new Promise((resolve) => {
+      const newContact = {
+        id: v4(),
+        name,
+        email,
+        phone,
+        category_id,
+      }
+
+      contacts.push(newContact);
+      resolve(newContact);
     });
   }
 }
