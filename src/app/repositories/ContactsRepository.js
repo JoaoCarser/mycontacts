@@ -14,7 +14,7 @@ let contacts = [
   {
     id: v4(),
     name: "Joao",
-    email: "carser@email.com",
+    email: "jaumcarser@email.com",
     phone: "9934599999",
     category_id: v4(),
   },
@@ -63,6 +63,30 @@ class ContactsRepository {
       resolve(newContact);
     });
   }
+  
+  
+  update(id, { 
+    name, email, phone, category_id 
+  }) {
+    return new Promise((resolve) => {
+      const updatedContact = {
+        id: v4(),
+        name,
+        email,
+        phone,
+        category_id,
+      };
+
+      contacts = contacts.map((contact) => (contact.id === id ? updatedContact : contact));
+    
+      resolve(updatedContact);
+    });
+
+  }
+
+
+
+
 }
 
 module.exports = new ContactsRepository();
