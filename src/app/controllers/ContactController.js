@@ -50,6 +50,8 @@ class ContactController {
 
     response.json(contact);
   }
+
+  
   async update(request, response) {
     // EDITAR UM REGISTRO
     const { id } = request.params;
