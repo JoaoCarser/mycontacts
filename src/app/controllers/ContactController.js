@@ -5,7 +5,9 @@ class ContactController {
 
   //TODA FUNÇÃO QUE UTILIZA 'AWAIT' PRECISA SER 'ASYNC'
   async index(request, response) {
-    const contacts = await ContactsRepository.findAll();
+    const { orderBy } = request.query;
+
+    const contacts = await ContactsRepository.findAll(orderBy);
 
     response.json(contacts);
   }
@@ -51,7 +53,6 @@ class ContactController {
     response.json(contact);
   }
 
-  
   async update(request, response) {
     // EDITAR UM REGISTRO
     const { id } = request.params;
@@ -71,7 +72,9 @@ class ContactController {
     const contactByEmail = await ContactsRepository.findByEmail(email);
 
     if (contactByEmail && contactByEmail.id !== id) {
-      return response.status(400).json({ error: "This e-mail is already in use" });
+      return response
+        .status(400)
+        .json({ error: "This e-mail is already in use" });
     }
 
     const contact = await ContactsRepository.update(id, {
