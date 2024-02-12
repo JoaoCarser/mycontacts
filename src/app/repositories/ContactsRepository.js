@@ -1,34 +1,15 @@
 // A RESPONSABILIDADE DO REPOSITORY É ACESSAR A DATA SOURCE
-
-const { v4 } = require("uuid");
-
 const db = require("../../database");
-
-// MOCKS DE CONTACTS
-let contacts = [
-  {
-    id: v4(),
-    name: "Carser",
-    email: "carser@email.com",
-    phone: "9999999999",
-    category_id: v4(),
-  },
-  {
-    id: v4(),
-    name: "Joao",
-    email: "jaumcarser@email.com",
-    phone: "9934599999",
-    category_id: v4(),
-  },
-];
 
 class ContactsRepository {
   // QUANDO NAO HOUVER DIRECTION NA REQUISIÇÃO TORNE 'ASC' PADRÃO
-  async findAll(orderBy = 'ASC') {
+  async findAll(orderBy = "ASC") {
     // PARA RETORNAR UMA LISTA NÃO PÕE ROWS ENTRE []
     // PARA EVITAR SQL INJECTION DEFINE EM DIRECTION QUAIS AS 2 POSSIBILIDADES DO orderBy
-    const direction = orderBy.toUpperCase() === 'DESC' ? 'DESC' : 'ASC';
-    const rows = await db.query(`SELECT * FROM contacts ORDER BY name ${direction}`);
+    const direction = orderBy.toUpperCase() === "DESC" ? "DESC" : "ASC";
+    const rows = await db.query(
+      `SELECT * FROM contacts ORDER BY name ${direction}`
+    );
     return rows;
   }
 
@@ -39,15 +20,10 @@ class ContactsRepository {
 
   // USA NA FUNÇÃO 'STORE' EM CONTROLLER
   async findByEmail(email) {
-    const [row] = await db.query("SELECT * FROM contacts WHERE email = $1", [email]);
+    const [row] = await db.query("SELECT * FROM contacts WHERE email = $1", [
+      email,
+    ]);
     return row;
-  }
-
-  delete(id) {
-    return new Promise((resolve) => {
-      contacts = contacts.filter((contact) => contact.id !== id);
-      resolve();
-    });
   }
 
   // USA NA FUNÇÃO 'STORE' EM CONTROLLER
@@ -64,22 +40,24 @@ class ContactsRepository {
     return row;
   }
 
-  update(id, { name, email, phone, category_id }) {
-    return new Promise((resolve) => {
-      const updatedContact = {
-        id: v4(),
-        name,
-        email,
-        phone,
-        category_id,
-      };
+  async update(id, { name, email, phone, category_id }) {
+    const [row] = await db.query(`
+    UPDATE contacts 
+    SET name = $1, email = $2, phone = $3, category_id = $4
+    WHERE id = $5
+    RETURNING *
+    `, [name, email, phone, category_id, id]);
 
-      contacts = contacts.map((contact) =>
-        contact.id === id ? updatedContact : contact
-      );
+    return row;
+  }
 
-      resolve(updatedContact);
-    });
+  async delete(id) {
+   const deleteOp = await db.query(`
+   DELETE FROM contacts 
+   WHERE id = $1
+   `, [id]);
+
+   return deleteOp;
   }
 }
 
