@@ -8,11 +8,11 @@ class CategoryController {
   }
 
   async show(request, response) {
-    const {id} = request.params;
+    const { id } = request.params;
 
     const category = await CategoriesRepository.findById(id);
 
-    if(!category) {
+    if (!category) {
       return response.status(404).json({ error: "Category not found" });
     }
 
@@ -28,10 +28,10 @@ class CategoryController {
 
     const categoryExists = await CategoriesRepository.findByName(name);
 
-    if(categoryExists){
+    if (categoryExists) {
       return response
-      .status(409)
-      .json({ error: "This name is already in use" });
+        .status(409)
+        .json({ error: "This name is already in use" });
     }
 
     const category = await CategoriesRepository.create({ name });
@@ -39,13 +39,12 @@ class CategoryController {
   }
 
   async update(request, response) {
-
-    const {id} = request.params;
-    const {name} = request.body;
+    const { id } = request.params;
+    const { name } = request.body;
 
     const categoryExists = await CategoriesRepository.findById(id);
 
-    if(!categoryExists) {
+    if (!categoryExists) {
       return response.status(404).json({ error: "Category not found" });
     }
 
@@ -53,17 +52,15 @@ class CategoryController {
       return response.status(400).json({ error: "Name is required" });
     }
 
-    const category = await CategoriesRepository.update(id, 
-      { 
-        name 
-      });
+    const category = await CategoriesRepository.update(id, {
+      name,
+    });
 
     return response.json(category);
-
   }
 
   async delete(request, response) {
-    const {id} = request.params;
+    const { id } = request.params;
 
     await CategoriesRepository.delete(id);
 
