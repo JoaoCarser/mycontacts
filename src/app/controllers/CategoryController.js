@@ -7,7 +7,17 @@ class CategoryController {
     response.json(categories);
   }
 
-  show(request, response) {}
+  async show(request, response) {
+    const {id} = request.params;
+
+    const category = await CategoriesRepository.findById(id);
+
+    if(!category) {
+      return response.status(404).json({ error: "Category not found" });
+    }
+
+    return response.json(category);
+  }
 
   async store(request, response) {
     const { name } = request.body;
@@ -16,13 +26,49 @@ class CategoryController {
       return response.status(400).json({ error: "Name is required" });
     }
 
+    const categoryExists = await CategoriesRepository.findByName(name);
+
+    if(categoryExists){
+      return response
+      .status(409)
+      .json({ error: "This name is already in use" });
+    }
+
     const category = await CategoriesRepository.create({ name });
     response.json(category);
   }
 
-  update() {}
+  async update(request, response) {
 
-  delete() {}
+    const {id} = request.params;
+    const {name} = request.body;
+
+    const categoryExists = await CategoriesRepository.findById(id);
+
+    if(!categoryExists) {
+      return response.status(404).json({ error: "Category not found" });
+    }
+
+    if (!name) {
+      return response.status(400).json({ error: "Name is required" });
+    }
+
+    const category = await CategoriesRepository.update(id, 
+      { 
+        name 
+      });
+
+    return response.json(category);
+
+  }
+
+  async delete(request, response) {
+    const {id} = request.params;
+
+    await CategoriesRepository.delete(id);
+
+    response.sendStatus(204);
+  }
 }
 
 module.exports = new CategoryController();

@@ -38,7 +38,7 @@ class ContactController {
 
     if (contactExists) {
       return response
-        .status(400)
+        .status(409)
         .json({ error: "This e-mail is already in use" });
     }
 
