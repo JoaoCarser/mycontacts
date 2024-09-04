@@ -1,5 +1,7 @@
+import PageHeader from "../../components/PageHeader";
+
 export default function EditContact(){
     return (
-        'EditContactPage'
+        <PageHeader title="Editar João Carser"/>
     );
 }
